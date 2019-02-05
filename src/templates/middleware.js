@@ -27,7 +27,7 @@ middleware['i18n'] = async ({ app, req, res, route, store, redirect, isHMR }) =>
   // Handle root path redirect
   const rootRedirect = '<%= options.rootRedirect %>'
   if (route.path === '/' && rootRedirect) {
-    redirect('/' + rootRedirect)
+    redirect('/' + rootRedirect, route.query)
     return
   }
 
@@ -49,11 +49,13 @@ middleware['i18n'] = async ({ app, req, res, route, store, redirect, isHMR }) =>
     const date = new Date()
     if (isSpa) {
       Cookies.set(cookieKey, locale, {
-        expires: new Date(date.setDate(date.getDate() + 365))
+        expires: new Date(date.setDate(date.getDate() + 365)),
+        path: '/'
       })
     } else if (res) {
       const redirectCookie = cookie.serialize(cookieKey, locale, {
-        expires: new Date(date.setDate(date.getDate() + 365))
+        expires: new Date(date.setDate(date.getDate() + 365)),
+        path: '/'
       })
       res.setHeader('Set-Cookie', redirectCookie)
     }
@@ -116,10 +118,6 @@ middleware['i18n'] = async ({ app, req, res, route, store, redirect, isHMR }) =>
           redirectToLocale = browserLocale
         }
 
-        if(useCookie){
-          setCookie(redirectToLocale || 1)
-        }
-
         if (redirectToLocale && redirectToLocale !== app.i18n.locale && locales.indexOf(redirectToLocale) !== -1) {
 
           // We switch the locale before redirect to prevent loops
@@ -135,5 +133,5 @@ middleware['i18n'] = async ({ app, req, res, route, store, redirect, isHMR }) =>
     }
   }
 
-  await switchLocale(locale = routeLocale ? routeLocale : locale)
+  await switchLocale(routeLocale ? routeLocale : locale)
 }

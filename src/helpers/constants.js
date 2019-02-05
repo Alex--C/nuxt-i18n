@@ -46,10 +46,12 @@ exports.DEFAULT_OPTIONS = {
     mutations: {
       setLocale: 'I18N_SET_LOCALE',
       setMessages: 'I18N_SET_MESSAGES'
-    }
+    },
+    preserveState: false
   },
   parsePages: true,
   pages: {},
+  encodePaths: true,
   beforeLanguageSwitch: () => null,
   onLanguageSwitched: () => null
 }
