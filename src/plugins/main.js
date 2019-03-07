@@ -44,7 +44,7 @@ export default async ({ app, route, store, req }) => {
           state.messages = messages
         }
       }
-    }, { preserveState: vuex.preserveState })
+    }, { preserveState: !!store.state[ vuex.moduleName ] })
   }
   <% } %>
 
@@ -85,10 +85,23 @@ export default async ({ app, route, store, req }) => {
 
   // Lazy-load translations
   if (lazy) {
-    const { loadLanguageAsync } = require('./utils')
-    const messages = await loadLanguageAsync(app.i18n, app.i18n.locale)
-    syncVuex(locale, messages)
-    return messages
+    // Push loaded language from store to avoid unnecessary reload
+    let messages;
+    if (store && store.state.i18n && store.state.i18n.locale === app.i18n.locale) {
+      if (!app.i18n.loadedLanguages) {
+        app.i18n.loadedLanguages = []
+      }
+      messages = store.state.i18n.messages;
+      app.i18n.setLocaleMessage(locale, messages)
+      app.i18n.loadedLanguages.push(locale)
+      return messages;
+    }
+    else {
+      const { loadLanguageAsync } = require('./utils')
+      messages = await loadLanguageAsync(app.i18n, app.i18n.locale)
+      syncVuex(locale, messages)
+      return messages;
+    }
   } else {
     // Sync Vuex
     syncVuex(locale, app.i18n.getLocaleMessage(locale))
