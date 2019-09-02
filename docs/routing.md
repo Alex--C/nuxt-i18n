@@ -71,8 +71,6 @@ To configure the strategy, use the `strategy` option. Make sure you have a `defa
 
 In some cases, you might want to translate URLs in addition to having them prefixed with the locale code. There are 2 ways of configuring custom paths for your pages: in-component options or via the module's configuration.
 
-> When using in-component paths options, your pages are parsed using [acorn](https://github.com/acornjs/acorn) which might fail if you're using TypeScript or advanced syntax that might not be recognized by the parser, in which case it is recommended you set your custom paths in the module's configuration instead.
-
 ### In-component options
 
 Add a `i18n.paths` property to your page and set your custom paths there:
@@ -93,13 +91,13 @@ export default {
 
 ### Module's configuration
 
-Make sure you set the `parsePages` option to `false` to disable acorn parsing and add your custom paths in the `pages` option:
+Make sure you set the `parsePages` option to `false` to disable babel parsing and add your custom paths in the `pages` option:
 
 ```js
 // nuxt.config.js
 
 ['nuxt-i18n', {
-  parsePages: false,   // Disable acorn parsing
+  parsePages: false,   // Disable babel parsing
   pages: {
     about: {
       en: '/about-us', // -> accessible at /about-us (no prefix since it's the default locale)
