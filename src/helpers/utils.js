@@ -79,7 +79,8 @@ exports.getLocaleFromRoute = (route = {}, routesNameSeparator = '', locales = []
     if (matches && matches.length > 1) {
       return matches[1]
     }
-  } else if (route.path) {
+  }
+  if (route.path) {
     // Extract from path
     const regexp = new RegExp(`^/${localesPattern}/`, 'i')
     const matches = route.path.match(regexp)
@@ -112,14 +113,14 @@ exports.getHostname = getHostname
 
 /**
  * Get locale code that corresponds to current hostname
- * @return {String} Locade code found if any
+ * @return {Array} Locade code found if any
  */
 exports.getLocaleDomain = () => {
   const hostname = app.i18n.forwardedHost ? getForwarded() : getHostname()
   if (hostname) {
-    const localeDomain = app.i18n.locales.find(l => l[LOCALE_DOMAIN_KEY] === hostname) // eslint-disable-line
-    if (localeDomain) {
-      return localeDomain[LOCALE_CODE_KEY]
+    const localesDomain = app.i18n.locales.filter(l => l[LOCALE_DOMAIN_KEY].split('/')[0] === hostname) // eslint-disable-line
+    if (localesDomain) {
+      return localesDomain;
     }
   }
   return null

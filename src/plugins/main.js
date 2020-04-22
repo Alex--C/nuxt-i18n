@@ -73,13 +73,12 @@ export default async ({ app, route, store, req }) => {
 
   let locale = app.i18n.defaultLocale || null
 
+  let locales = app.i18n.locales;
   if (app.i18n.differentDomains) {
-    const domainLocale = getLocaleDomain()
-    locale = domainLocale ? domainLocale : locale
-  } else {
-    const routeLocale = getLocaleFromRoute(route, app.i18n.routesNameSeparator, app.i18n.locales)
-    locale = routeLocale ? routeLocale : locale
+    locales = getLocaleDomain()
   }
+  const routeLocale = getLocaleFromRoute(route, app.i18n.routesNameSeparator, locales)
+  locale = routeLocale ? routeLocale : locale
 
   app.i18n.locale = locale
 

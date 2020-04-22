@@ -15,6 +15,11 @@ exports.makeRoutes = (baseRoutes, {
   pagesDir,
   differentDomains
 }) => {
+  let localeObjects = {};
+  for (let i = 0, length1 = locales.length; i < length1; i++) {
+    const locale = locales[i];
+    localeObjects[getLocaleCodes([locale])[0]] = locale;
+  }
   locales = getLocaleCodes(locales)
   let localizedRoutes = []
 
@@ -37,6 +42,7 @@ exports.makeRoutes = (baseRoutes, {
     // Component's specific options
     const componentOptions = {
       locales,
+      localeObjects,
       ...pageOptions,
       ...routeOptions
     }
@@ -54,6 +60,7 @@ exports.makeRoutes = (baseRoutes, {
     // Generate routes for component's supported locales
     for (let i = 0, length1 = componentOptions.locales.length; i < length1; i++) {
       const locale = componentOptions.locales[i]
+      const prefix = localeObjects[locale].prefix ? localeObjects[locale].prefix : locale;
       let { name, path } = route
       const localizedRoute = { ...route }
 
@@ -77,19 +84,20 @@ exports.makeRoutes = (baseRoutes, {
       }
 
       // Get custom path if any
-      if (componentOptions.paths && componentOptions.paths[locale]) {
-        path = encodePaths ? encodeURI(componentOptions.paths[locale]) : componentOptions.paths[locale]
+      if (componentOptions.paths && componentOptions.paths[prefix]) {
+        path = encodePaths ? encodeURI(componentOptions.paths[prefix]) : componentOptions.paths[prefix]
         isChild = false
       }
 
       // Add route prefix if needed
       const shouldAddPrefix = (
         // No prefix if app uses different locale domains
-        !differentDomains &&
+        //!differentDomains &&
         // Only add prefix on top level routes
         !isChild &&
         // Skip default locale if strategy is PREFIX_EXCEPT_DEFAULT
-        !(locale === defaultLocale && strategy === STRATEGIES.PREFIX_EXCEPT_DEFAULT)
+        !(locale === defaultLocale && strategy === STRATEGIES.PREFIX_EXCEPT_DEFAULT) &&
+        prefix !== null
       )
 
       if (locale === defaultLocale && strategy === STRATEGIES.PREFIX_AND_DEFAULT) {
@@ -97,7 +105,7 @@ exports.makeRoutes = (baseRoutes, {
       }
 
       if (shouldAddPrefix) {
-        path = `/${locale}${path}`
+        path = `/${prefix}${path}`
       }
 
       localizedRoute.path = path
