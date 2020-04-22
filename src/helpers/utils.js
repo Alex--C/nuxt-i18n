@@ -72,18 +72,18 @@ exports.getPageOptions = (route, pages, locales, pagesDir) => {
 exports.getLocaleFromRoute = (route = {}, routesNameSeparator = '', locales = []) => {
   const codes = getLocaleCodes(locales)
   const localesPattern = `(${codes.join('|')})`
-  // Extract from route name
-  if (route.name) {
-    const regexp = new RegExp(`${routesNameSeparator}${localesPattern}$`, 'i')
-    const matches = route.name.match(regexp)
-    if (matches && matches.length > 1) {
-      return matches[1]
-    }
-  }
   if (route.path) {
     // Extract from path
     const regexp = new RegExp(`^/${localesPattern}/`, 'i')
     const matches = route.path.match(regexp)
+    if (matches && matches.length > 1) {
+      return matches[1]
+    }
+  }
+  if (route.name) {
+    // Extract from route name
+    const regexp = new RegExp(`${routesNameSeparator}${localesPattern}$`, 'i')
+    const matches = route.name.match(regexp)
     if (matches && matches.length > 1) {
       return matches[1]
     }
