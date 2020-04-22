@@ -79,7 +79,7 @@ export default async ({ app, route, store, req }) => {
   }
   const routeLocale = getLocaleFromRoute(route, app.i18n.routesNameSeparator, locales)
   locale = routeLocale ? routeLocale : locale
-  console.warn(route, locales, locale);
+  console.warn(route.name, route.path, locales, locale);
 
   app.i18n.locale = locale
 
