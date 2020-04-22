@@ -82,7 +82,7 @@ exports.getLocaleFromRoute = (route = {}, routesNameSeparator = '', locales = []
   }
   if (route.path) {
     // Extract from path
-    const regexp = new RegExp(`^/${localesPattern}/`, 'i')
+    const regexp = new RegExp(`^/${localesPattern}(/|$)`, 'i')
     const matches = route.path.match(regexp)
     if (matches && matches.length > 1) {
       return matches[1]
