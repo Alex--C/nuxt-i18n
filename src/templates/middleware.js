@@ -65,9 +65,9 @@ middleware['i18n'] = async ({ app, req, res, route, store, redirect, isHMR }) =>
 
   const switchLocale = async (newLocale) => {
     // Abort if different domains option enabled
-    if (app.i18n.differentDomains) {
+    /*if (app.i18n.differentDomains) {
       return
-    }
+    }*/
 
     // Abort if newLocale did not change
     if (newLocale === app.i18n.locale) {
