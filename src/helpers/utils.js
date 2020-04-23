@@ -118,7 +118,7 @@ exports.getHostname = getHostname
 exports.getLocaleDomain = () => {
   const hostname = app.i18n.forwardedHost ? getForwarded() : getHostname()
   if (hostname) {
-    const localesDomain = app.i18n.locales.filter(l => l[LOCALE_DOMAIN_KEY].split('/')[0] === hostname) // eslint-disable-line
+    const localesDomain = app.i18n.locales.filter(l => l[LOCALE_DOMAIN_KEY] === hostname) // eslint-disable-line
     if (localesDomain) {
       return localesDomain;
     }

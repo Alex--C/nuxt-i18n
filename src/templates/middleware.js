@@ -15,10 +15,20 @@ middleware['i18n'] = async ({ app, req, res, route, store, redirect, isHMR }) =>
 
   // Helpers
   const LOCALE_CODE_KEY = '<%= options.LOCALE_CODE_KEY %>'
+  const LOCALE_DOMAIN_KEY = '<%= options.LOCALE_DOMAIN_KEY %>'
   const getLocaleCodes = <%= options.getLocaleCodes %>
   const getLocaleFromRoute = <%= options.getLocaleFromRoute %>
+  const getLocaleDomain = <%= options.getLocaleDomain %>
+  const getHostname = <%= options.getHostname %>
+  const getForwarded = <%= options.getForwarded %>
   const routesNameSeparator = '<%= options.routesNameSeparator %>'
-  const locales = getLocaleCodes(<%= JSON.stringify(options.locales) %>)
+  const localeObjects = <%= JSON.stringify(options.locales) %>
+  let locales = getLocaleCodes(localeObjects)
+
+  // Handle different domains; only allow locales from the current host
+  if (app.i18n.differentDomains) {
+    locales = getLocaleCodes(getLocaleDomain())
+  }
   const syncVuex = <%= options.syncVuex %>
 
 
